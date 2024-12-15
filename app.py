@@ -3,7 +3,6 @@ from database.connection import get_db_connection
 from models.article import Article
 from models.author import Author
 from models.magazine import Magazine
-
 def main():
     # Initialize the database and create tables
     create_tables()
@@ -68,3 +67,15 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Create Author and Magazine
+author = Author("John Doe")
+magazine = Magazine("Tech Today", "Technology")
+
+# Create Article
+article = Article(author, magazine, "Understanding AI")
+
+# Fetch relationships
+print(author.articles())
+print(author.magazines())
+

@@ -1,10 +1,25 @@
-class Article:
-    def __init__(self, id, title, content, author_id, magazine_id):
-        self.id = id
-        self.title = title
-        self.content = content
-        self.author_id = author_id
-        self.magazine_id = magazine_id
+from database.connection import conn
 
-    def __repr__(self):
-        return f'<Article {self.title}>'
+class Article:
+    def __init__(self, author, magazine, title):
+        if not isinstance(title, str) or not (5 <= len(title) <= 50):
+            raise ValueError("Title must be between 5 and 50 characters.")
+        if not isinstance(author.id, int) or not isinstance(magazine.id, int):
+            raise ValueError("Author and Magazine must have valid IDs.")
+        
+        self._title = title
+        self._author_id = author.id
+        self._magazine_id = magazine.id
+
+        # Insert into the database
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO articles (title, author_id, magazine_id) VALUES (?, ?, ?)",
+            (title, self._author_id, self._magazine_id)
+        )
+        conn.commit()
+        self._id = cur.lastrowid
+
+    @property
+    def title(self):
+        return self._title
